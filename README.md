@@ -58,6 +58,17 @@ npm start
 
 ---
 
+## Monitoring
+
+Every request is logged to stdout:
+```
+[2026-05-12T17:00:00.000Z] POST /transactions 201 3ms
+```
+
+The `/health` endpoint provides uptime, current timestamp, and heap memory usage — suitable for uptime monitoring or health checks in a CI pipeline.
+
+---
+
 ## API Endpoints
 
 ### `GET /health`
@@ -154,4 +165,4 @@ Configuration: [`.github/workflows/main.yml`](.github/workflows/main.yml)
 |--------|--------|---------|
 | Sprint 0 — Planning | ✅ Done | Backlog, DoD, Sprint plans |
 | Sprint 1 — Core API | ✅ Done | US-01 (add), US-02 (list), US-03 (delete), US-07 (health) |
-| Sprint 2 — Improvements | 🔜 Next | US-04 (summary), US-05 (filter), US-06 (update), monitoring |
+| Sprint 2 — Improvements | ✅ Done | US-04 (summary), US-05 (filter), US-06 (update), logging, enhanced /health |
