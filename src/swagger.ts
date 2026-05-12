@@ -32,6 +32,14 @@ const options: swaggerJsdoc.Options = {
             date: { type: 'string', format: 'date', example: '2026-05-12' },
           },
         },
+        Summary: {
+          type: 'object',
+          properties: {
+            totalIncome: { type: 'number', example: 1500.0 },
+            totalExpenses: { type: 'number', example: 320.5 },
+            netBalance: { type: 'number', example: 1179.5 },
+          },
+        },
       },
     },
   },
