@@ -117,4 +117,70 @@ router.delete('/:id', (req: Request, res: Response) => {
   res.status(204).send();
 });
 
+/**
+ * @openapi
+ * /transactions/{id}:
+ *   put:
+ *     summary: Update a transaction
+ *     tags: [Transactions]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/CreateTransaction'
+ *     responses:
+ *       200:
+ *         description: Updated transaction
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Transaction'
+ *       400:
+ *         description: Validation error
+ *       404:
+ *         description: Transaction not found
+ */
+router.put('/:id', (req: Request<{ id: string }, object, CreateTransactionBody>, res: Response) => {
+  const { amount, type, category, description, date } = req.body;
+  const patch: Partial<Omit<Transaction, 'id'>> = {};
+
+  if (amount !== undefined) {
+    if (typeof amount !== 'number' || amount <= 0) {
+      res.status(400).json({ error: 'amount must be a positive number' });
+      return;
+    }
+    patch.amount = amount;
+  }
+  if (type !== undefined) {
+    if (type !== 'income' && type !== 'expense') {
+      res.status(400).json({ error: 'type must be "income" or "expense"' });
+      return;
+    }
+    patch.type = type;
+  }
+  if (category !== undefined) {
+    if (typeof category !== 'string' || category.trim() === '') {
+      res.status(400).json({ error: 'category must be a non-empty string' });
+      return;
+    }
+    patch.category = category.trim();
+  }
+  if (typeof description === 'string') patch.description = description.trim();
+  if (typeof date === 'string') patch.date = date;
+
+  const updated = store.update(req.params.id, patch);
+  if (!updated) {
+    res.status(404).json({ error: 'Transaction not found' });
+    return;
+  }
+  res.json(updated);
+});
+
 export default router;
